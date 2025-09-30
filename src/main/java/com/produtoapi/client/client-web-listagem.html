@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Produtos</title>
+</head>
+
+<body>
+  <h2>Lista De Produtos HTML/JavaScripts</h2>
+  <table id="produtosTable" border="1">
+
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Preço</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+    </tbody>
+
+  </table>
+
+  <div id="erroMensagem" style="color:red; display: none;">
+    Erro ao buscar produto. Por Favor Tente mais tarde
+  </div>
+
+  <div id="totalProdutos">
+    Total de produtos: 0
+  </div>
+
+  <script>
+    function listarProdutos() {
+      //requisição GET
+      fetch('http://localhost:8080/produtos')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Erro na rede: ' + response.status);
+          }
+          return response.json();
+        })
+        .then(data => {
+          const tableBody = document.getElementById('produtosTable').getElementsByTagName('tbody')[0];
+          let totalProdutos = 0;
+          data.forEach(produto => {
+            const row = tableBody.insertRow();
+            const cellId = row.insertCell(0);
+            const cellNome = row.insertCell(1);
+            const cellPreco = row.insertCell(2);
+
+            //inserir dados nas celulas
+            cellId.textContent = produto.id;
+            cellNome.textContent = produto.nome;
+            cellPreco.textContent = produto.preco;
+            totalProdutos++;
+          });
+          //exibe produtos
+          document.getElementById('totalProdutos').textContent = 'Total de produtos: ' + totalProdutos;
+        })
+        .catch(error => {
+          console.error('Erro ao buscar produtos: ', error);
+          document.getElementById('erroMensagem').style.display = 'Block';
+        })
+    }
+
+    //executa a função e preenche a tabela ao acontecer eventos na pagina
+    document.addEventListener('DOMContentLoaded', listarProdutos);
+  </script>
+</body>
+
+</html>
