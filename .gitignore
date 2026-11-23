@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Arquivos locais ###
+hs_err_pid*
+*.log
+*.db
